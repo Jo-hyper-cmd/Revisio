@@ -26,7 +26,17 @@ const getRevisionSchema = {
     additionalProperties: false,
 };
 
+const deleteRevisionSchema = {
+    type: "object",
+    properties: {
+        id: { type: "string" },
+    },
+    required: ["id"],
+    additionalProperties: false,
+};
+
 module.exports = {
     createRevisionSchema,
-    getRevisionSchema
+    getRevisionSchema,
+    deleteRevisionSchema,
 };
