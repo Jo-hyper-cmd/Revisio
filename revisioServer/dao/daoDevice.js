@@ -59,10 +59,27 @@ function update(device) {
     }
 }
 
+function list() {
+    try {
+        const files = fs.readdirSync(deviceFolderPath);
+        const deviceList = files.map((file) => {
+            const fileData = fs.readFileSync(
+                path.join(deviceFolderPath, file),
+                "utf8"
+            );
+            return JSON.parse(fileData);
+        });
+        return deviceList;
+    } catch (error) {
+        throw { code: "failedToListDevices", message: error.message };
+    }
+}
+
 
 module.exports = {
     create,
     get,
     remove,
     update,
+    list
 };
