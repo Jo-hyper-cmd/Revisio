@@ -20,6 +20,18 @@ function create(revision) {
     }
 }
 
+function get(revisionId) {
+    try {
+        const filePath = path.join(deviceFolderPath, `${revisionId}.json`);
+        const fileData = fs.readFileSync(filePath, "utf8");
+        return JSON.parse(fileData);
+    } catch (error) {
+        if (error.code === "ENOENT") return null;
+        throw { code: "failedToReadDevice", message: error.message };
+    }
+}
+
 module.exports = {
     create,
+    get
 };
