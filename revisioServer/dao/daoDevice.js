@@ -44,9 +44,25 @@ function remove(deviceId) {
     }
 }
 
+function update(device) {
+    try {
+        const currentDevice = get(device.id);
+        if (!currentDevice) return null;
+
+        const newDevice = { ...currentDevice, ...device };
+        const filePath = path.join(deviceFolderPath, `${device.id}.json`);
+        const fileData = JSON.stringify(newDevice);
+        fs.writeFileSync(filePath, fileData, "utf8");
+        return newDevice;
+    } catch (error) {
+        throw { code: "failedToUpdateDevice", message: error.message };
+    }
+}
+
 
 module.exports = {
     create,
     get,
     remove,
+    update,
 };
