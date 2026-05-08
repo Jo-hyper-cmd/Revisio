@@ -47,8 +47,18 @@ const getDeviceSchema = {
     additionalProperties: false,
 };
 
+const deleteDeviceSchema = {
+    type: "object",
+    properties: {
+        id: { type: "string" },
+    },
+    required: ["id"],
+    additionalProperties: false,
+};
+
 
 module.exports = {
     createDeviceSchema,
     getDeviceSchema,
+    deleteDeviceSchema
 };

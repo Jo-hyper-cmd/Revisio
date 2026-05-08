@@ -31,8 +31,22 @@ function get(deviceId) {
     }
 }
 
+function remove(deviceId) {
+    try {
+        const filePath = path.join(deviceFolderPath, `${deviceId}.json`);
+        fs.unlinkSync(filePath);
+        return {};
+    } catch (error) {
+        if (error.code === "ENOENT") {
+            return {};
+        }
+        throw { code: "failedToRemoveDevice", message: error.message };
+    }
+}
+
 
 module.exports = {
     create,
     get,
+    remove,
 };
