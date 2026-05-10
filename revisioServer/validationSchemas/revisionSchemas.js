@@ -55,9 +55,19 @@ const updateRevisionSchema = {
     additionalProperties: false,
 };
 
+const listRevisionSchema = {
+    type: "object",
+    properties: {
+        deviceId: { type: "string" },
+        status: { type: "string", enum: ["valid", "expiringSoon", "expired"] },
+    },
+    additionalProperties: false,
+};
+
 module.exports = {
     createRevisionSchema,
     getRevisionSchema,
     deleteRevisionSchema,
-    updateRevisionSchema
+    updateRevisionSchema,
+    listRevisionSchema
 };
