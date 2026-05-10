@@ -86,10 +86,21 @@ const updateDeviceSchema = {
     additionalProperties: false,
 };
 
+const listDeviceSchema = {
+    type: "object",
+    properties: {
+        kind: { type: "string", enum: ["Spotrebič", "Predlžovací prívod"] },
+        usageGroup: { type: "string", enum: ["A", "B", "C", "D", "E"] },
+        protectionClass: { type: "string", enum: ["I", "II", "III"] },
+        usageCategory: { type: "string", enum: ["V ruke", "Ostatné"] },
+    },
+    additionalProperties: false,
+};
 
 module.exports = {
     createDeviceSchema,
     getDeviceSchema,
     deleteDeviceSchema,
-    updateDeviceSchema
+    updateDeviceSchema,
+    listDeviceSchema
 };
