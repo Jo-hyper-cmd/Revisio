@@ -16,7 +16,7 @@ async function deleteDevice(req, res) {
         const validate = ajv.validate(deleteDeviceSchema, device);
         if (!validate) {
             res.status(400).json({
-                code: "invalidInput",
+                code: "inputDataIsNotValid",
                 message: "Input data is not valid",
                 validationresults: ajv.errors,
             });
@@ -70,8 +70,6 @@ async function deleteDevice(req, res) {
             res.status(400).json({ ...error });
             return;
         }
-
-        //TODO - check if device have active revision
 
     } catch (error) {
         console.log("Message:", error.message);

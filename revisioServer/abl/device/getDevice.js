@@ -11,8 +11,8 @@ async function getDevice(req, res) {
         const valid = ajv.validate(getDeviceSchema, reqParams);
         if (!valid) {
             res.status(400).json({
-                code: "dtoInIsNotValid",
-                message: "dtoIn is not valid",
+                code: "inputDataIsNotValid",
+                message: "Input data is not valid",
                 validationError: ajv.errors,
             });
             return;
