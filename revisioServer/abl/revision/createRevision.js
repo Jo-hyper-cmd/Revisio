@@ -1,4 +1,4 @@
-const {createRevisionSchema} = require("../../validationSchemas/revisionSchemas.js");
+const { createRevisionSchema } = require("../../validationSchemas/revisionSchemas.js");
 const daoRevision = require("../../dao/daoRevision");
 const daoDevice = require("../../dao/daoDevice");
 
@@ -12,44 +12,50 @@ async function createRevision(req, res) {
     try {
         let revision = req.body;
 
-        const validate = ajv.validate(createRevisionSchema, revision);
-        if (!validate) {
+        const valid = ajv.validate(createRevisionSchema, revision);
+        if (!valid) {
             res.status(400).json({
-                code: "invalidInput",
-                message: "Input data is not valid",
-                error: ajv.errors,
+                code: "inputDataIsNotValid",
+                message: "InputData is not valid",
+                validationError: ajv.errors,
             });
             return;
         }
 
-        // check if revisionDate is not in future
+        // revisionDate must not be in the future
         const revisionDate = new Date(revision.revisionDate);
         const now = new Date();
         if (revisionDate > now) {
-            res.status(400).json({
+            return res.status(400).json({
                 code: "revisionDateInFuture",
-                message: "Revision date cannot be in the future",
+                message: "Revision date must be current day or a day in the past",
             });
-            return;
         }
 
-        // check if revisionDate is in future
+        // nextRevisionDate must be in the future
         const nextRevisionDate = new Date(revision.nextRevisionDate);
         if (nextRevisionDate <= now) {
-            res.status(400).json({
+            return res.status(400).json({
                 code: "nextRevisionDateNotInFuture",
-                message: "Next revision date must be in the future",
+                message: "Next revision date must be a day in the future",
             });
-            return;
         }
 
-        // nextRevisionDate must be bigger than revisionDate
+        // nextRevisionDate must be after revisionDate
         if (nextRevisionDate <= revisionDate) {
-            res.status(400).json({
+            return res.status(400).json({
                 code: "nextRevisionDateBeforeRevisionDate",
                 message: "Next revision date must be after revision date",
             });
-            return;
+        }
+
+        // revisionResult cannot be true when runningTest or visualTest failed
+        if (revision.revisionResult === true &&
+            (revision.runningTest === false || revision.visualTest === false)) {
+            return res.status(400).json({
+                code: "inconsistentRevisionResult",
+                message: "Revision result cannot be true when runningTest or visualTest failed",
+            });
         }
 
         // check if device exists
@@ -57,29 +63,23 @@ async function createRevision(req, res) {
         try {
             device = daoDevice.get(revision.deviceId);
         } catch (error) {
-            res.status(500).json({
-                code: "deviceLookupFailed",
-                message: "Failed to verify device existence",
-                error: error.message,
-            });
-            return;
+            return res.status(400).json({ ...error });
         }
         if (!device) {
-            res.status(404).json({
-                code: "deviceNotFound",
+            return res.status(404).json({
+                code: "deviceDoesNotExist",
                 message: `Device with id ${revision.deviceId} does not exist`,
             });
-            return;
         }
 
-
+        // create revision in persistent storage
         try {
             revision = daoRevision.create(revision);
         } catch (error) {
-            res.status(400).json({ ...error });
-            return;
+            return res.status(400).json({ ...error });
         }
 
+        // return outputData
         res.json(revision);
     } catch (error) {
         console.log("Message:", error.message);

@@ -11,24 +11,24 @@ async function getRevision(req, res) {
         const valid = ajv.validate(getRevisionSchema, reqParams);
         if (!valid) {
             res.status(400).json({
-                code: "dtoInIsNotValid",
-                message: "dtoIn is not valid",
+                code: "inputDataIsNotValid",
+                message: "InputData is not valid",
                 validationError: ajv.errors,
             });
             return;
         }
 
-        const device = daoRevision.get(reqParams.id);
-        if (!device) {
+        const revision = daoRevision.get(reqParams.id);
+        if (!revision) {
             res.status(404).json({
-                code: "deviceNotFound",
+                code: "revisionNotFound",
                 message: `Revision with id ${reqParams.id} not found`,
             });
             return;
         }
 
-        // return properly filled dtoOut
-        res.json(device);
+        // return outputData
+        res.json(revision);
     } catch (error) {
         console.log("Message:", error.message);
         console.log("Stack:", error.stack);

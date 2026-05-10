@@ -14,14 +14,14 @@ async function deleteRevision(req, res) {
         const validate = ajv.validate(deleteRevisionSchema, revision);
         if (!validate) {
             res.status(400).json({
-                code: "invalidInput",
-                message: "Input data is not valid",
-                validationresults: ajv.errors,
+                code: "inputDataIsNotValid",
+                message: "InputData is not valid",
+                validationError: ajv.errors,
             });
             return;
         }
 
-        // Check if device exists
+        // Check if revision exists
         let existingRevision;
         try {
             existingRevision = daoRevision.get(revision.id);
@@ -31,17 +31,17 @@ async function deleteRevision(req, res) {
 
         if (!existingRevision) {
             return res.status(404).json({
-                code: "deviceNotFound",
+                code: "revisionNotFound",
                 message: `Revision with id '${revision.id}' not found`,
             });
         }
 
-        //remove device
+        //remove revision
 
         try {
             revision = daoRevision.remove(revision.id);
             return res.status(200).json({
-                code: "deviceDeleted",
+                code: "revisionDeleted",
                 message: `Revision has been deleted`,
             });
         } catch (error) {

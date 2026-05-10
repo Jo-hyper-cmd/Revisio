@@ -15,7 +15,7 @@ async function updateDevice(req, res) {
         const valid = ajv.validate(updateDeviceSchema, device);
         if (!valid) {
             res.status(400).json({
-                code: "invalidInput",
+                code: "inputDataIsNotValid",
                 message: "Input data is not valid",
                 validationError: ajv.errors,
             });
