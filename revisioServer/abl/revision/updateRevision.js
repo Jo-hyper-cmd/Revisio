@@ -69,7 +69,7 @@ async function updateRevision(req, res) {
         if (nextRevisionDate <= revisionDate) {
             return res.status(400).json({
                 code: "nextRevisionDateBeforeRevisionDate",
-                message: "Next revision date must be after revision date",
+                message: "Next revision date must be a day in the future",
             });
         }
 

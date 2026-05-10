@@ -42,7 +42,7 @@ const updateRevisionSchema = {
         deviceId: { type: "string"},
         revisionDate: { type: "string", format: "date" },
         nextRevisionDate: { type: "string", format: "date" },
-        insulationResistance: { type: "number", minimum: 0 },
+        insulationResistance: { type: "number", exclusiveMinimum: 0 },
         groundingResistance: { type: "number", minimum: 0 },
         leakingCurrent: { type: "number", minimum: 0 },
         runningTest: { type: "boolean"},
