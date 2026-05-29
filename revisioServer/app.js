@@ -3,7 +3,7 @@ const cors = require('cors')
 const app = express()
 const port = 3000
 
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(cors({ origin: 'http://localhost:5174' }))
 
 const controllerDevice = require("./controller/controllerDevice");
 const controllerRevision = require("./controller/controllerRevision");
