@@ -61,7 +61,8 @@ function update(revision) {
 
 function list() {
     try {
-        const files = fs.readdirSync(revisionFolderPath);
+        if (!fs.existsSync(revisionFolderPath)) return [];
+        const files = fs.readdirSync(revisionFolderPath).filter(f => f.endsWith(".json"));
         const revisionList = files.map((file) => {
             const fileData = fs.readFileSync(
                 path.join(revisionFolderPath, file),

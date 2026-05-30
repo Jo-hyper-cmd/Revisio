@@ -61,7 +61,8 @@ function update(device) {
 
 function list() {
     try {
-        const files = fs.readdirSync(deviceFolderPath);
+        if (!fs.existsSync(deviceFolderPath)) return [];
+        const files = fs.readdirSync(deviceFolderPath).filter(f => f.endsWith(".json"));
         const deviceList = files.map((file) => {
             const fileData = fs.readFileSync(
                 path.join(deviceFolderPath, file),
